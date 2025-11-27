@@ -36,6 +36,28 @@ namespace Client
             else if (Command == "/help") Help();
         }
 
+
+        public static void Help()
+        {
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine("Commands to the server: ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("/config");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" - set initial settings ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("/connect");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" - connection to the server ");
+
+            Console.ForegroundColor = ConsoleColor.Green;
+            Console.Write("/status");
+            Console.ForegroundColor = ConsoleColor.White;
+            Console.WriteLine(" - show list users ");
+        }
+
         public static void OnSettings()
         {
             string Path = Directory.GetCurrentDirectory() + "/.config";

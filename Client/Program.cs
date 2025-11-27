@@ -3,6 +3,7 @@ using System.IO;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
+using System.Threading;
 
 namespace Client
 {
@@ -17,6 +18,10 @@ namespace Client
         static void Main(string[] args)
         {
             OnSettings();
+
+            Thread tCheckToken = new Thread(CheckToken);
+            tCheckToken.Start();
+
             while (true)
             {
                 SetCommand();
@@ -85,6 +90,51 @@ namespace Client
 
             Console.ForegroundColor = ConsoleColor.Green;
             Console.WriteLine("Успешное подключение. Ваш токен: " + ClientToken);
+        }
+
+        public static void CheckToken()
+        {
+            while (true)
+            {
+                if (!String.IsNullOrEmpty(ClientToken))
+                {
+                    IPEndPoint EndPoint = new IPEndPoint(ServerIpAddress, ServerPort);
+                    Socket Socket = new Socket(
+                        AddressFamily.InterNetwork,
+                        SocketType.Stream,
+                        ProtocolType.Tcp);
+
+                    try
+                    {
+                        Socket.Connect(EndPoint); ;
+
+                    }
+                    catch (Exception exp)
+                    {
+                        Console.ForegroundColor = ConsoleColor.Red;
+                        Console.WriteLine("Error: " + exp.Message);
+                    }
+
+                    if (Socket.Connected)
+                    {
+
+                        Socket.Send(Encoding.UTF8.GetBytes(ClientToken));
+
+                        byte[] Bytes = new byte[10485760];
+                        int ByteRec = Socket.Receive(Bytes);
+
+                        string Response = Encoding.UTF8.GetString(Bytes, 0, ByteRec);
+                        if (Response == "/disconnect")
+                        {
+                            Console.ForegroundColor = ConsoleColor.Red;
+                            Console.WriteLine("The client is disconnected from server");
+                            ClientToken = String.Empty;
+                        }
+                    }
+                }
+
+                Thread.Sleep(1000);
+            }
         }
 
         public static void GetStatus()

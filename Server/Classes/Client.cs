@@ -13,7 +13,7 @@ namespace Server.Classes
         public Client()
         {
             Random random = new Random();
-            string Chars = "FDSAFASGfdsfGSDFGSDFGFDSF12345678988884441111";
+            string Chars = "ASDFGHTYasdfghty123";
             this.Token = new string(Enumerable.Repeat(Chars, 15).Select(x => x[random.Next(Chars.Length)]).ToArray());
             DateConnect = DateTime.Now;
         }

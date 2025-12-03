@@ -2,10 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Net;
 using System.Net.Sockets;
 using System.Text;
 using System.Threading;
+
 
 namespace Server
 {
@@ -100,7 +102,7 @@ namespace Server
                 return;
             }
 
-            var blackListRecord = db.blackLists.FirstOrDefault(x => x.Login == login);
+            var blackListRecord = db.BlackLists.FirstOrDefault(x => x.Login == login);
 
             if (blackListRecord == null)
             {
@@ -110,10 +112,10 @@ namespace Server
 
             int recordId = blackListRecord.Id;
 
-            var recordToDelete = db.blackLists.Find(recordId);
+            var recordToDelete = db.BlackLists.Find(recordId);
             if (recordToDelete != null)
             {
-                db.blackLists.Remove(recordToDelete);
+                db.BlackLists.Remove(recordToDelete);
                 db.SaveChanges();
 
                 Console.ForegroundColor = ConsoleColor.Green;
@@ -141,13 +143,13 @@ namespace Server
                 return;
             }
 
-            if (db.blackLists.Any(x => x.Login == login))
+            if (db.BlackLists.Any(x => x.Login == login))
             {
                 Console.WriteLine("User already banned");
                 return;
             }
 
-            db.blackLists.Add(new BlackList { Login = login });
+            db.BlackLists.Add(new BlackList { Login = login });
             db.SaveChanges();
 
             Console.ForegroundColor = ConsoleColor.Red;
@@ -279,7 +281,7 @@ namespace Server
 
                 using var db = new DbContexted();
 
-                if (db.blackLists.Any(x => x.Login == login))
+                if (db.BlackLists.Any(x => x.Login == login))
                     return "/banned";
 
                 var user = db.Users.FirstOrDefault(x => x.Login == login && x.Password == password);

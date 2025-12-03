@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -7,6 +8,8 @@ namespace Server.Classes
     public class DbContexted : DbContext
     {
         public DbSet<User> Users { get; set; }
+
+        public DbSet<BlackList> BlackLists { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder options)
         {
